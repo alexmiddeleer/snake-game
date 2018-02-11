@@ -18,11 +18,7 @@ export default Component.extend({
     this._super(...arguments);
     let grid = [];
     for (var i = 0; i < GRID_HEIGHT; i++) {
-      let col = [];
-      for (var j = 0; j < GRID_WIDTH; j++) {
-        col.push(SPACE_CHAR);
-      }
-      grid.push(col);
+      grid.push(SPACE_CHAR.repeat(GRID_WIDTH).split(''));
     }
     this.set('grid', grid);
   },
