@@ -9,6 +9,7 @@ export default Component.extend({
   grid: null,
   headX: 9,
   headY: 4,
+  gameOver: false,
 
   init() {
     this._super(...arguments);
@@ -35,11 +36,19 @@ export default Component.extend({
     this.set('gridText', gridText);
   },
 
+  endGame() {
+    this.set('gameOver', true);
+  },
+
   goUp() {
-    this.get('grid')[this.get('headY')][this.get('headX')] = SPACE_CHAR;
-    this.set('headY', this.get('headY') - 1);
-    this.get('grid')[this.get('headY')][this.get('headX')] = HEAD_CHAR;
-    this.drawGrid();
+    try {
+      this.get('grid')[this.get('headY')][this.get('headX')] = SPACE_CHAR;
+      this.set('headY', this.get('headY') - 1);
+      this.get('grid')[this.get('headY')][this.get('headX')] = HEAD_CHAR;
+      this.drawGrid();
+    } catch(e) {
+      this.endGame();
+    }
   },
 
   didInsertElement() {
