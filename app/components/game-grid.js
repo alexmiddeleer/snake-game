@@ -47,12 +47,17 @@ export default Component.extend({
     }
   },
 
+  moveHead(oldX, oldY) {
+    this.get('grid')[oldY][oldX] = SPACE_CHAR;
+    this.get('grid')[this.get('headY')][this.get('headX')] = HEAD_CHAR;
+  },
+
   goUp() {
     try {
-      this.get('grid')[this.get('headY')][this.get('headX')] = SPACE_CHAR;
-      this.set('headY', this.get('headY') - 1);
+      let currY = this.get('headY')
+      this.set('headY', currY - 1);
       this.checkGameState();
-      this.get('grid')[this.get('headY')][this.get('headX')] = HEAD_CHAR;
+      this.moveHead(this.get('headX'), currY);
       this.drawGrid();
     } catch(e) {
       this.endGame();
@@ -61,10 +66,10 @@ export default Component.extend({
 
   goRight() {
     try {
-      this.get('grid')[this.get('headY')][this.get('headX')] = SPACE_CHAR;
-      this.set('headX', this.get('headX') + 1);
+      let currX = this.get('headX');
+      this.set('headX', currX + 1);
       this.checkGameState();
-      this.get('grid')[this.get('headY')][this.get('headX')] = HEAD_CHAR;
+      this.moveHead(currX, this.get('headY'));
       this.drawGrid();
     } catch(e) {
       this.endGame();
@@ -73,10 +78,10 @@ export default Component.extend({
 
   goDown() {
     try {
-      this.get('grid')[this.get('headY')][this.get('headX')] = SPACE_CHAR;
-      this.set('headY', this.get('headY') + 1);
+      let currY = this.get('headY')
+      this.set('headY', currY + 1);
       this.checkGameState();
-      this.get('grid')[this.get('headY')][this.get('headX')] = HEAD_CHAR;
+      this.moveHead(this.get('headX'), currY);
       this.drawGrid();
     } catch(e) {
       this.endGame();
@@ -85,10 +90,10 @@ export default Component.extend({
 
   goLeft() {
     try {
-      this.get('grid')[this.get('headY')][this.get('headX')] = SPACE_CHAR;
-      this.set('headX', this.get('headX') - 1);
+      let currX = this.get('headX');
+      this.set('headX', currX - 1);
       this.checkGameState();
-      this.get('grid')[this.get('headY')][this.get('headX')] = HEAD_CHAR;
+      this.moveHead(currX, this.get('headY'));
       this.drawGrid();
     } catch(e) {
       this.endGame();
