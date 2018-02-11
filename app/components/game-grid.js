@@ -40,10 +40,18 @@ export default Component.extend({
     this.set('gameOver', true);
   },
 
+  checkGameState() {
+    if ((this.get('headX') >= GRID_WIDTH) || (this.get('headX') < 0) ||
+        (this.get('headY') >= GRID_HEIGHT) || (this.get('headY') < 0)) {
+      throw 'game over';
+    }
+  },
+
   goUp() {
     try {
       this.get('grid')[this.get('headY')][this.get('headX')] = SPACE_CHAR;
       this.set('headY', this.get('headY') - 1);
+      this.checkGameState();
       this.get('grid')[this.get('headY')][this.get('headX')] = HEAD_CHAR;
       this.drawGrid();
     } catch(e) {
@@ -55,9 +63,7 @@ export default Component.extend({
     try {
       this.get('grid')[this.get('headY')][this.get('headX')] = SPACE_CHAR;
       this.set('headX', this.get('headX') + 1);
-      if (this.get('headX') >= GRID_WIDTH) {
-        throw 'game over';
-      }
+      this.checkGameState();
       this.get('grid')[this.get('headY')][this.get('headX')] = HEAD_CHAR;
       this.drawGrid();
     } catch(e) {
@@ -69,9 +75,7 @@ export default Component.extend({
     try {
       this.get('grid')[this.get('headY')][this.get('headX')] = SPACE_CHAR;
       this.set('headY', this.get('headY') + 1);
-      if (this.get('headY') >= GRID_HEIGHT) {
-        throw 'game over';
-      }
+      this.checkGameState();
       this.get('grid')[this.get('headY')][this.get('headX')] = HEAD_CHAR;
       this.drawGrid();
     } catch(e) {
@@ -83,9 +87,7 @@ export default Component.extend({
     try {
       this.get('grid')[this.get('headY')][this.get('headX')] = SPACE_CHAR;
       this.set('headX', this.get('headX') - 1);
-      if (this.get('headX') < 0) {
-        throw 'game over';
-      }
+      this.checkGameState();
       this.get('grid')[this.get('headY')][this.get('headX')] = HEAD_CHAR;
       this.drawGrid();
     } catch(e) {
