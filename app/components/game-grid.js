@@ -4,12 +4,15 @@ const GRID_WIDTH = 20;
 const GRID_HEIGHT = 10;
 const SPACE_CHAR = String.fromCharCode(0x00A0);
 const HEAD_CHAR = 'X';
+const GOAL_CHAR = 'W';
 
 export default Component.extend({
   grid: null,
   headX: 9,
   headY: 4,
   gameOver: false,
+  goalX: 7,
+  goalY: 2,
 
   init() {
     this._super(...arguments);
@@ -30,6 +33,8 @@ export default Component.extend({
 
   drawGrid() {
     let gridText = '';
+    this.get('grid')[this.get('headY')][this.get('headX')] = HEAD_CHAR;
+    this.get('grid')[this.get('goalY')][this.get('goalX')] = GOAL_CHAR;
     for (var i = 0; i < this.get('grid').length; i++) {
       gridText += this.get('grid')[i].join('') + '\n';
     }
@@ -45,11 +50,13 @@ export default Component.extend({
         (this.get('headY') >= GRID_HEIGHT) || (this.get('headY') < 0)) {
       throw 'game over';
     }
+    if ((this.get('headX') === this.get('goalX')) && this.get('headY') === this.get('goalY')) {
+      throw 'game over';
+    }
   },
 
   moveHead(oldX, oldY) {
     this.get('grid')[oldY][oldX] = SPACE_CHAR;
-    this.get('grid')[this.get('headY')][this.get('headX')] = HEAD_CHAR;
   },
 
   moveVertically(amount) {
