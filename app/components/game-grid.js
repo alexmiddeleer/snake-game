@@ -20,11 +20,7 @@ export default Component.extend({
     for (var i = 0; i < GRID_HEIGHT; i++) {
       let col = [];
       for (var j = 0; j < GRID_WIDTH; j++) {
-        if (i === this.headY && j === this.headX) {
-          col.push(HEAD_CHAR);
-        } else {
-          col.push(SPACE_CHAR);
-        }
+        col.push(SPACE_CHAR);
       }
       grid.push(col);
     }
