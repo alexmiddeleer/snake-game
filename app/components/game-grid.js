@@ -52,10 +52,10 @@ export default Component.extend({
     this.get('grid')[this.get('headY')][this.get('headX')] = HEAD_CHAR;
   },
 
-  goUp() {
+  moveVertically(amount) {
     try {
       let currY = this.get('headY')
-      this.set('headY', currY - 1);
+      this.set('headY', currY + amount);
       this.checkGameState();
       this.moveHead(this.get('headX'), currY);
       this.drawGrid();
@@ -64,34 +64,10 @@ export default Component.extend({
     }
   },
 
-  goRight() {
+  moveHorizontally(amount) {
     try {
       let currX = this.get('headX');
-      this.set('headX', currX + 1);
-      this.checkGameState();
-      this.moveHead(currX, this.get('headY'));
-      this.drawGrid();
-    } catch(e) {
-      this.endGame();
-    }
-  },
-
-  goDown() {
-    try {
-      let currY = this.get('headY')
-      this.set('headY', currY + 1);
-      this.checkGameState();
-      this.moveHead(this.get('headX'), currY);
-      this.drawGrid();
-    } catch(e) {
-      this.endGame();
-    }
-  },
-
-  goLeft() {
-    try {
-      let currX = this.get('headX');
-      this.set('headX', currX - 1);
+      this.set('headX', currX + amount);
       this.checkGameState();
       this.moveHead(currX, this.get('headY'));
       this.drawGrid();
@@ -105,16 +81,16 @@ export default Component.extend({
     window.addEventListener('keydown', function(e) {
       switch(e.key) {
         case 'ArrowUp':
-          this.goUp();
+          this.moveVertically(-1);
           break;
         case 'ArrowDown':
-          this.goDown();
+          this.moveVertically(1);
           break;
         case 'ArrowRight':
-          this.goRight();
+          this.moveHorizontally(1);
           break;
         case 'ArrowLeft':
-          this.goLeft();
+          this.moveHorizontally(-1);
           break;
 
         default:
