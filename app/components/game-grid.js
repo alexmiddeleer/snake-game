@@ -51,6 +51,48 @@ export default Component.extend({
     }
   },
 
+  goRight() {
+    try {
+      this.get('grid')[this.get('headY')][this.get('headX')] = SPACE_CHAR;
+      this.set('headX', this.get('headX') + 1);
+      if (this.get('headX') >= GRID_WIDTH) {
+        throw 'game over';
+      }
+      this.get('grid')[this.get('headY')][this.get('headX')] = HEAD_CHAR;
+      this.drawGrid();
+    } catch(e) {
+      this.endGame();
+    }
+  },
+
+  goDown() {
+    try {
+      this.get('grid')[this.get('headY')][this.get('headX')] = SPACE_CHAR;
+      this.set('headY', this.get('headY') + 1);
+      if (this.get('headY') >= GRID_HEIGHT) {
+        throw 'game over';
+      }
+      this.get('grid')[this.get('headY')][this.get('headX')] = HEAD_CHAR;
+      this.drawGrid();
+    } catch(e) {
+      this.endGame();
+    }
+  },
+
+  goLeft() {
+    try {
+      this.get('grid')[this.get('headY')][this.get('headX')] = SPACE_CHAR;
+      this.set('headX', this.get('headX') - 1);
+      if (this.get('headX') < 0) {
+        throw 'game over';
+      }
+      this.get('grid')[this.get('headY')][this.get('headX')] = HEAD_CHAR;
+      this.drawGrid();
+    } catch(e) {
+      this.endGame();
+    }
+  },
+
   didInsertElement() {
     this._super(...arguments);
     window.addEventListener('keydown', function(e) {
@@ -59,10 +101,13 @@ export default Component.extend({
           this.goUp();
           break;
         case 'ArrowDown':
+          this.goDown();
           break;
         case 'ArrowRight':
+          this.goRight();
           break;
         case 'ArrowLeft':
+          this.goLeft();
           break;
 
         default:
