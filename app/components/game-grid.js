@@ -3,16 +3,20 @@ import Component from '@ember/component';
 const GRID_WIDTH = 20;
 const GRID_HEIGHT = 10;
 const SPACE_CHAR = String.fromCharCode(0x00A0);
+const TAIL_CHAR = '~';
 const HEAD_CHAR = 'X';
 const GOAL_CHAR = 'W';
 
 export default Component.extend({
   grid: null,
-  headX: 9,
-  headY: 4,
+  headX: 1,
+  headY: 1,
   gameOver: false,
   goalX: 7,
   goalY: 2,
+  tailLen: 1,
+  tailX: 0,
+  tailY: 1,
 
   init() {
     this._super(...arguments);
@@ -48,7 +52,14 @@ export default Component.extend({
   },
 
   moveHead(oldX, oldY) {
-    this.get('grid')[oldY][oldX] = SPACE_CHAR;
+    if (this.get('tailLen') > 0) {
+      this.get('grid')[oldY][oldX] = TAIL_CHAR;
+      this.get('grid')[this.get('tailY')][this.get('tailX')] = SPACE_CHAR;
+      this.set('tailY', oldY);
+      this.set('tailX', oldX);
+    } else {
+      this.get('grid')[oldY][oldX] = SPACE_CHAR;
+    }
   },
 
   moveVertically(amount) {
