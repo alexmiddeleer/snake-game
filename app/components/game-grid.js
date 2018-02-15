@@ -42,11 +42,16 @@ export default Component.extend({
   },
 
   checkGameState() {
-    if ((this.get('headX') >= GRID_WIDTH) || (this.get('headX') < 0) ||
-        (this.get('headY') >= GRID_HEIGHT) || (this.get('headY') < 0)) {
+    let headX = this.get('headX');
+    let headY = this.get('headY');
+    if ((headX >= GRID_WIDTH) || (headX < 0) ||
+        (headY >= GRID_HEIGHT) || (headY < 0)) {
       throw 'game over';
     }
-    if ((this.get('headX') === this.get('goalX')) && this.get('headY') === this.get('goalY')) {
+    if ((headX === this.get('goalX')) && headY === this.get('goalY')) {
+      throw 'game over';
+    }
+    if (this.get('grid')[headY][headX] === TAIL_CHAR) {
       throw 'game over';
     }
   },
