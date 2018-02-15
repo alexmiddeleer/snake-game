@@ -6,6 +6,7 @@ const SPACE_CHAR = String.fromCharCode(0x00A0);
 const TAIL_CHAR = '~';
 const HEAD_CHAR = 'X';
 const GOAL_CHAR = 'W';
+const FOOD_CHAR = 'F';
 
 export default Component.extend({
   grid: null,
@@ -14,9 +15,8 @@ export default Component.extend({
   gameOver: false,
   goalX: 7,
   goalY: 2,
-  tailLen: 1,
-  tailX: 0,
-  tailY: 1,
+  foodX: 8,
+  foodY: 3,
 
   init() {
     this._super(...arguments);
@@ -25,12 +25,19 @@ export default Component.extend({
       grid.push(SPACE_CHAR.repeat(GRID_WIDTH).split(''));
     }
     this.set('grid', grid);
+    this.set('tail', []);
   },
 
   drawGrid() {
     let gridText = '';
+    let tail = this.get('tail');
+    tail.forEach((seg) => {
+      let {x, y} = seg;
+      this.get('grid')[y][x] = TAIL_CHAR;
+    });
     this.get('grid')[this.get('headY')][this.get('headX')] = HEAD_CHAR;
     this.get('grid')[this.get('goalY')][this.get('goalX')] = GOAL_CHAR;
+    this.get('grid')[this.get('foodY')][this.get('foodX')] = FOOD_CHAR;
     for (var i = 0; i < this.get('grid').length; i++) {
       gridText += this.get('grid')[i].join('') + '\n';
     }
@@ -57,13 +64,18 @@ export default Component.extend({
   },
 
   moveHead(oldX, oldY) {
-    if (this.get('tailLen') > 0) {
-      this.get('grid')[oldY][oldX] = TAIL_CHAR;
-      this.get('grid')[this.get('tailY')][this.get('tailX')] = SPACE_CHAR;
-      this.set('tailY', oldY);
-      this.set('tailX', oldX);
+    if (this.get('tail').length > 0) {
+      this.get('tail').push({x: oldX, y: oldY });
+      let { x, y } = this.get('tail').shift();
+      this.get('grid')[y][x] = SPACE_CHAR;
+      if (this.get('grid')[this.get('headY')][this.get('headX')] === FOOD_CHAR) {
+        this.get('tail').push({ x: this.get('headX'), y: this.get('headY')});
+      }
     } else {
       this.get('grid')[oldY][oldX] = SPACE_CHAR;
+      if ((this.get('grid')[this.get('headY')][this.get('headX')] === FOOD_CHAR)) {
+        this.get('tail').push({ x: this.get('headX'), y: this.get('headY')});
+      }
     }
   },
 
