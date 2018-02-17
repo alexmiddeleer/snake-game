@@ -8,7 +8,11 @@ const TAIL_CHAR = '~';
 const HEAD_CHAR = 'X';
 // const GOAL_CHAR = 'W';
 const FOOD_CHAR = 'F';
-const MOVE_INTERVAL_MS = 150;
+const MOVE_INTERVAL_MS = 200;
+const RIGHT = 'right';
+const LEFT = 'left';
+const UP = 'up';
+const DOWN = 'down';
 
 export default Component.extend({
   grid: null,
@@ -19,7 +23,7 @@ export default Component.extend({
   goalY: 2,
   foodX: 8,
   foodY: 3,
-  direction: 'right',
+  direction: RIGHT,
 
   init() {
     this._super(...arguments);
@@ -113,33 +117,39 @@ export default Component.extend({
     this.drawGrid();
   },
 
+  willDestroyElement() {
+    window.removeEventListener('keydown', this.get('onKeyDown'));
+    this._super(...arguments);
+  },
+
   didInsertElement() {
     this._super(...arguments);
-    window.addEventListener('keydown', function(e) {
+    this.set('onKeyDown', function(e) {
+      let direction = this.get('direction')
       try {
         switch(e.key) {
           case 'ArrowUp':
-            if (!(this.get('direction') === 'down')) {
-              this.set('direction', 'up');
-              this.get('startSnake').perform('up');
+            if (!(direction === DOWN || direction === UP)) {
+              this.set('direction', UP);
+              this.get('startSnake').perform(UP);
             }
             break;
           case 'ArrowDown':
-            if (!(this.get('direction') === 'up')) {
-              this.set('direction', 'down');
-              this.get('startSnake').perform('down');
+            if (!(direction === DOWN || direction === UP)) {
+              this.set('direction', DOWN);
+              this.get('startSnake').perform(DOWN);
             }
             break;
           case 'ArrowRight':
-            if (!(this.get('direction') === 'left')) {
-              this.set('direction', 'right');
-              this.get('startSnake').perform('right');
+            if (!(direction === LEFT || direction === RIGHT)) {
+              this.set('direction', RIGHT);
+              this.get('startSnake').perform(RIGHT);
             }
             break;
           case 'ArrowLeft':
-            if (!(this.get('direction') === 'right')) {
-              this.set('direction', 'left');
-              this.get('startSnake').perform('left');
+            if (!(direction === LEFT || direction === RIGHT)) {
+              this.set('direction', LEFT);
+              this.get('startSnake').perform(LEFT);
             }
             break;
 
@@ -151,6 +161,7 @@ export default Component.extend({
         this.endGame();
       }
     }.bind(this));
+    window.addEventListener('keydown', this.get('onKeyDown'));
     this.drawGrid();
     this.get('startSnake').perform(this.get('direction'));
   },
@@ -159,16 +170,16 @@ export default Component.extend({
     if (!this.get('gameOver')) {
       try {
         switch(direction) {
-          case 'up':
+          case UP:
             this.moveVertically(-1);
             break;
-          case 'down':
+          case DOWN:
             this.moveVertically(1);
             break;
-          case 'right':
+          case RIGHT:
             this.moveHorizontally(1);
             break;
-          case 'left':
+          case LEFT:
             this.moveHorizontally(-1);
             break;
 
