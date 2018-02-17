@@ -63,19 +63,20 @@ export default Component.extend({
     }
   },
 
+  ateFood() {
+    this.get('tail').push({ x: this.get('headX'), y: this.get('headY')});
+  },
+
   moveHead(oldX, oldY) {
     if (this.get('tail').length > 0) {
       this.get('tail').push({x: oldX, y: oldY });
       let { x, y } = this.get('tail').shift();
       this.get('grid')[y][x] = SPACE_CHAR;
-      if (this.get('grid')[this.get('headY')][this.get('headX')] === FOOD_CHAR) {
-        this.get('tail').push({ x: this.get('headX'), y: this.get('headY')});
-      }
     } else {
       this.get('grid')[oldY][oldX] = SPACE_CHAR;
-      if ((this.get('grid')[this.get('headY')][this.get('headX')] === FOOD_CHAR)) {
-        this.get('tail').push({ x: this.get('headX'), y: this.get('headY')});
-      }
+    }
+    if (this.get('grid')[this.get('headY')][this.get('headX')] === FOOD_CHAR) {
+      this.ateFood();
     }
   },
 
