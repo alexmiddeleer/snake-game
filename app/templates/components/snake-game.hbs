@@ -1,0 +1,7 @@
+<h1>Snake Game</h1>
+<div>Score: {{score}}</div>
+{{#unless gameOver}}
+  {{game-grid foodEaten=(action "bumpScore") onGameOver=(action (mut gameOver) true)}}
+{{else}}
+  <button {{action "restartGame"}}>Start Game</button>
+{{/unless}}

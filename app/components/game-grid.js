@@ -49,6 +49,7 @@ export default Component.extend({
 
   endGame() {
     this.set('gameOver', true);
+    this.get('onGameOver')();
   },
 
   checkGameState() {
@@ -56,7 +57,6 @@ export default Component.extend({
     let headY = this.get('headY');
     if ((headX >= GRID_WIDTH) || (headX < 0) ||
         (headY >= GRID_HEIGHT) || (headY < 0)) {
-      debugger;
       throw 'game over';
     }
     // if ((headX === this.get('goalX')) && headY === this.get('goalY')) {
@@ -64,7 +64,6 @@ export default Component.extend({
     //   throw 'game over';
     // }
     if (this.get('grid')[headY][headX] === TAIL_CHAR) {
-      debugger;
       throw 'game over';
     }
   },
@@ -80,6 +79,7 @@ export default Component.extend({
       });
     })
     let nextFoodLoc = availableFoodSpots[Math.floor(Math.random()*(availableFoodSpots.length))];
+    this.get('foodEaten')();
     this.set('foodX', nextFoodLoc.x);
     this.set('foodY', nextFoodLoc.y);
   },
