@@ -1,12 +1,14 @@
 import Component from '@ember/component';
+import { task, timeout, restartable } from 'ember-concurrency';
 
 const GRID_WIDTH = 20;
 const GRID_HEIGHT = 10;
 const SPACE_CHAR = String.fromCharCode(0x00A0);
 const TAIL_CHAR = '~';
 const HEAD_CHAR = 'X';
-const GOAL_CHAR = 'W';
+// const GOAL_CHAR = 'W';
 const FOOD_CHAR = 'F';
+const MOVE_INTERVAL_MS = 300;
 
 export default Component.extend({
   grid: null,
@@ -17,6 +19,7 @@ export default Component.extend({
   goalY: 2,
   foodX: 8,
   foodY: 3,
+  direction: 'right',
 
   init() {
     this._super(...arguments);
@@ -113,16 +116,16 @@ export default Component.extend({
       try {
         switch(e.key) {
           case 'ArrowUp':
-            this.moveVertically(-1);
+            this.set('direction', 'up');
             break;
           case 'ArrowDown':
-            this.moveVertically(1);
+            this.set('direction', 'down');
             break;
           case 'ArrowRight':
-            this.moveHorizontally(1);
+            this.set('direction', 'right');
             break;
           case 'ArrowLeft':
-            this.moveHorizontally(-1);
+            this.set('direction', 'left');
             break;
 
           default:
@@ -134,5 +137,33 @@ export default Component.extend({
       }
     }.bind(this));
     this.drawGrid();
-  }
+    this.get('startSnake').perform();
+  },
+
+  startSnake: task(function* () {
+    while(!this.get('gameOver')) {
+      yield timeout(MOVE_INTERVAL_MS);
+      try {
+        switch(this.get('direction')) {
+          case 'up':
+            this.moveVertically(-1);
+            break;
+          case 'down':
+            this.moveVertically(1);
+            break;
+          case 'right':
+            this.moveHorizontally(1);
+            break;
+          case 'left':
+            this.moveHorizontally(-1);
+            break;
+
+          default:
+            // code
+        }
+      } catch(e) {
+        this.endGame();
+      }
+    }
+  }).restartable()
 });
