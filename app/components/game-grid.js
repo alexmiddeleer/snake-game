@@ -36,7 +36,7 @@ export default Component.extend({
       this.get('grid')[y][x] = TAIL_CHAR;
     });
     this.get('grid')[this.get('headY')][this.get('headX')] = HEAD_CHAR;
-    this.get('grid')[this.get('goalY')][this.get('goalX')] = GOAL_CHAR;
+    // this.get('grid')[this.get('goalY')][this.get('goalX')] = GOAL_CHAR;
     this.get('grid')[this.get('foodY')][this.get('foodX')] = FOOD_CHAR;
     for (var i = 0; i < this.get('grid').length; i++) {
       gridText += this.get('grid')[i].join('') + '\n';
@@ -65,6 +65,17 @@ export default Component.extend({
 
   ateFood() {
     this.get('tail').push({ x: this.get('headX'), y: this.get('headY')});
+    let availableFoodSpots = [];
+    this.get('grid').forEach((col, y) => {
+      col.forEach((cell, x) => {
+        if (cell !== HEAD_CHAR && cell !== TAIL_CHAR) {
+          availableFoodSpots.push({ x, y });
+        }
+      });
+    })
+    let nextFoodLoc = availableFoodSpots[Math.floor(Math.random()*(availableFoodSpots.length))];
+    this.set('foodX', nextFoodLoc.x);
+    this.set('foodY', nextFoodLoc.y);
   },
 
   moveHead(oldX, oldY) {
