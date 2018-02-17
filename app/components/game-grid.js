@@ -1,5 +1,5 @@
 import Component from '@ember/component';
-import { task, timeout, restartable } from 'ember-concurrency';
+import { task, timeout } from 'ember-concurrency';
 
 const GRID_WIDTH = 20;
 const GRID_HEIGHT = 10;
@@ -8,7 +8,7 @@ const TAIL_CHAR = '~';
 const HEAD_CHAR = 'X';
 // const GOAL_CHAR = 'W';
 const FOOD_CHAR = 'F';
-const MOVE_INTERVAL_MS = 300;
+const MOVE_INTERVAL_MS = 150;
 
 export default Component.extend({
   grid: null,
@@ -56,12 +56,15 @@ export default Component.extend({
     let headY = this.get('headY');
     if ((headX >= GRID_WIDTH) || (headX < 0) ||
         (headY >= GRID_HEIGHT) || (headY < 0)) {
+      debugger;
       throw 'game over';
     }
-    if ((headX === this.get('goalX')) && headY === this.get('goalY')) {
-      throw 'game over';
-    }
+    // if ((headX === this.get('goalX')) && headY === this.get('goalY')) {
+    //   debugger;
+    //   throw 'game over';
+    // }
     if (this.get('grid')[headY][headX] === TAIL_CHAR) {
+      debugger;
       throw 'game over';
     }
   },
