@@ -119,16 +119,28 @@ export default Component.extend({
       try {
         switch(e.key) {
           case 'ArrowUp':
-            this.set('direction', 'up');
+            if (!(this.get('direction') === 'down')) {
+              this.set('direction', 'up');
+              this.get('startSnake').perform('up');
+            }
             break;
           case 'ArrowDown':
-            this.set('direction', 'down');
+            if (!(this.get('direction') === 'up')) {
+              this.set('direction', 'down');
+              this.get('startSnake').perform('down');
+            }
             break;
           case 'ArrowRight':
-            this.set('direction', 'right');
+            if (!(this.get('direction') === 'left')) {
+              this.set('direction', 'right');
+              this.get('startSnake').perform('right');
+            }
             break;
           case 'ArrowLeft':
-            this.set('direction', 'left');
+            if (!(this.get('direction') === 'right')) {
+              this.set('direction', 'left');
+              this.get('startSnake').perform('left');
+            }
             break;
 
           default:
@@ -140,14 +152,13 @@ export default Component.extend({
       }
     }.bind(this));
     this.drawGrid();
-    this.get('startSnake').perform();
+    this.get('startSnake').perform(this.get('direction'));
   },
 
-  startSnake: task(function* () {
-    while(!this.get('gameOver')) {
-      yield timeout(MOVE_INTERVAL_MS);
+  startSnake: task(function* (direction) {
+    if (!this.get('gameOver')) {
       try {
-        switch(this.get('direction')) {
+        switch(direction) {
           case 'up':
             this.moveVertically(-1);
             break;
@@ -164,6 +175,8 @@ export default Component.extend({
           default:
             // code
         }
+        yield timeout(MOVE_INTERVAL_MS);
+        this.get('startSnake').perform(direction);
       } catch(e) {
         this.endGame();
       }
