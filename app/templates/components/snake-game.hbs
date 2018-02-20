@@ -5,3 +5,17 @@
 {{else}}
   <button {{action "restartGame"}}>Start Game</button>
 {{/unless}}
+{{#if (and scoreUnsaved gameOver)}}
+  <div>Save score?</div>
+  {{input value=scoreName}}
+  <button {{action "submit"}}>Submit</button>
+{{/if}}
+<h2>High Scores</h2>
+<table class="scores">
+  {{#each highScores as |score|}}
+    <tr>
+      <td>{{score.name}}</td>
+      <td>{{score.score}}</td>
+    </tr>
+  {{/each}}
+</table>
